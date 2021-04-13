@@ -7,3 +7,6 @@ Coding exercise
 - Last Name (string)
 - Version (integer)
 - Insurance Company (string)
+
+
+![output](https://user-images.githubusercontent.com/22947583/114591585-0fbc8400-9c58-11eb-90f5-018c9bc44e4c.JPG)
