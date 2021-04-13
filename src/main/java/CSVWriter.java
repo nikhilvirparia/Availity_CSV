@@ -20,8 +20,7 @@ public class CSVWriter {
         hashMap  = new HashMap<String,List<Enrollee>>();
 
         //Reader for CSV Files, current path to Temp File
-        //C:\Users\Nick\Desktop\CSV\CSV\newEnrolleesFile.csv
-        Reader reader = new FileReader("C:\\Users\\Nick\\Desktop\\CSV\\CSV\\newEnrolleesFile.csv");
+        Reader reader = new FileReader("C:\\Users\\Nick\\IdeaProjects\\NewCSV\\newEnrolleesFile.csv");
         CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                 .withHeader("userId","name","version","insuranceCompany")
                 .withIgnoreHeaderCase()
@@ -42,15 +41,15 @@ public class CSVWriter {
             newEnrollee.setVersion(version);
             newEnrollee.setInsuranceCompany(insuranceCompany);
 
-            //Check map if insurance company already exists in map
+            // Map to see if the insurance company exists
             if(hashMap.containsKey(insuranceCompany))
             {
-                //Loop through Enrollee List to check for existing User Id
+                // Check for the duplicate User Id
                 for(int i = 0; i < hashMap.get(insuranceCompany).size(); i++)
                 {
                     if(hashMap.get(insuranceCompany).get(i).getUserId().equals(newEnrollee.getUserId()))
                     {
-                        //Check if new Enrollee entry has latest Version
+                        // New Enrollee check for the latest Version
                         if(hashMap.get(insuranceCompany).get(i).getVersion() < newEnrollee.getVersion())
                         {
                             hashMap.get(insuranceCompany).set(i, newEnrollee);
@@ -60,36 +59,33 @@ public class CSVWriter {
                     }
                 }
 
-                //Add New Enrollee object
+                // New Enrolle object add it to the hashMap
                 if(isNew) {
                     hashMap.get(insuranceCompany).add(newEnrollee);
                 }
             }
             else
             {
-                //Create new Enrollee list and map to insurance company
+                // Map the new Enrolle list to insurance company after creating it
                 List<Enrollee> newList = new ArrayList<Enrollee>();
                 newList.add(newEnrollee);
                 hashMap.put(insuranceCompany, newList);
             }
         }
 
-        //File Number for File Name
+        //File Number
         int fileNum = 1;
 
-        //Iterate through Map for List of Enrollees
+        // In the hashmap go through list of Enrolless
         for (Map.Entry<String,List<Enrollee>> entry : hashMap.entrySet()) {
 
-            //Sort Enrollee List by Names
+            // Enrolle list by Names and sort them
             Collections.sort(hashMap.get(entry.getValue().get(0).getInsuranceCompany()), compareByName);
-
-            String fileName="C:\\Users\\Nick\\Desktop\\CSV\\CSV\\insuranceFile"+fileNum+".csv";
-
+            String fileName="C:\\Users\\Nick\\IdeaProjects\\NewCSV\\insuranceFile"+fileNum+".csv";
             FileWriter fw = new FileWriter(fileName);
-
             BufferedWriter writer = new BufferedWriter(fw);
 
-            //Printer for new CSV files
+            //Print the new insuranceFile.csv
             CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                     .withHeader("userId","name","version","insuranceCompany"));
 
@@ -98,15 +94,18 @@ public class CSVWriter {
                 csvPrinter.printRecord(entry.getValue().get(i).getUserId(), entry.getValue().get(i).getName(),
                         entry.getValue().get(i).getVersion(), entry.getValue().get(i).getInsuranceCompany());
             }
-            //Increment File Number for name
+            //File number + Name Increment them
             fileNum++;
             csvPrinter.flush();
         }
 
+        // Print out the HashMap using the Guava method
         System.out.println(convertWithGuava(hashMap));
     }
 
+    // CovertwithGuava to print in the screen the json string
     public static String convertWithGuava(HashMap<String, List<Enrollee>> map) {
+        System.out.println("");
         return Joiner.on(",").withKeyValueSeparator("=").join(map);
     }
 
@@ -118,7 +117,7 @@ public class CSVWriter {
         this.hashMap = hashMap;
     }
 
-    //Comparator to sort Enrollees by Name
+    // Sort Enrolless by Name
     static Comparator<Enrollee> compareByName = new Comparator<Enrollee>() {
         @Override
         public int compare(Enrollee o1, Enrollee o2) {
